@@ -1,0 +1,31 @@
+﻿mt=12 #計測時間(秒)
+x = np.arange(mt*30) #プロット用の配列
+y=[0]*mt*30 #プロット用の輝度配列
+def save_frame_camera_cycle(device_num, dir_path, delay=1, window_name='frame'):
+    cap = cv2.VideoCapture(device_num) #毎フレームカメラから画像を保存する関数
+
+    if not cap.isOpened():
+        return
+
+    os.makedirs(dir_path, exist_ok=True)
+
+    n = 0
+    m = 0
+    while True:
+        ret, frame = cap.read()
+        if m  == mt*30: #mt秒経過するまで処理を行う
+            break;
+        cv2.imwrite("camera_capture.jpg",frame); #1フレームごとにカメラから画像をファイルにして出力
+        im = imread('camera_capture.jpg') 
+        y[m]=np.mean(im)　#y[m]にmフレーム目の画像の輝度平均値を格納
+        m += 1 
+    cv2.destroyAllWindows() #カメラのウィンドウを閉じる
+save_frame_camera_cycle(0, '/画像')　#save_frame_camera_cycleを実行する
+im = imread('camera_capture.jpg')
+plt.plot(x, y) 
+plt.xlabel("frame(1/30sec)") 
+plt.ylabel("Luminance") 
+plt.xlim(2, mt*30-1) 
+plt.ylim(np.mean(y)-5, np.mean(y)+5) 
+plt.title("$pulse$") 
+plt.show() #結果をプロットして出力する

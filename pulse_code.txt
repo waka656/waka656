@@ -9,7 +9,6 @@ def save_frame_camera_cycle(device_num, dir_path, delay=1, window_name='frame'):
 
     os.makedirs(dir_path, exist_ok=True)
 
-    n = 0
     m = 0
     while True:
         ret, frame = cap.read()
